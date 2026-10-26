@@ -37,6 +37,7 @@ describe("direct analysis snapshot files", () => {
     await writeFile(targetPath, "fixture");
     vi.stubEnv("HOPPER_LAUNCHER_PATH", process.execPath);
     vi.stubEnv("REA_ANALYSIS_PROVIDER", "environment-provider");
+    vi.stubEnv("REA_RIZIN_COMMAND", "/rea-unconfigured-deep-provider/rizin");
 
     await expect(
       createDirectAnalysis(process.env).runDirectAnalysis(
@@ -53,7 +54,7 @@ describe("direct analysis snapshot files", () => {
       details: {
         selection_reason: "unknown_provider",
         requested_provider_id: "request-provider",
-        candidate_ids: ["ghidra", "hopper", "ida", "kuna"],
+        candidate_ids: ["ghidra", "hopper", "ida", "kuna", "rizin-ghidra"],
       },
     });
   });

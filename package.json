@@ -209,6 +209,7 @@
     "verify:ida": "npm run build:cached && node scripts/verify-real-ida.mjs",
     "verify:ghidra:switch": "npm run build:cached && node scripts/verify-real-ghidra-switch.mjs",
     "verify:kuna": "npm run build:cached && node scripts/verify-real-kuna.mjs",
+    "verify:rzghidra": "npm run build:cached && node scripts/verify-real-rzghidra.mjs",
     "verify:ghidra:dos": "npm run build:cached && node scripts/verify-real-ghidra-dos.mjs",
     "verify:ghidra:com": "npm run build:cached && node scripts/verify-real-ghidra-com.mjs",
     "verify:ghidra:raw": "npm run build:cached && node scripts/verify-real-ghidra-raw.mjs",

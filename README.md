@@ -62,7 +62,7 @@ See a feature in an app that you want in your own product? Ask your agent to inv
 
 REA connects your agent to tools for inspecting native binaries, JavaScript and Electron apps, .NET assemblies, and websites. You can also use the same tools from your terminal. Analysis runs locally, and results include the evidence and limitations behind each conclusion.
 
-Setup registers REA with your agent and installs matching workflow instructions. Native analysis can use an existing Hopper, Ghidra, or IDA installation; setup can optionally install Hopper with approval. Static JavaScript analysis needs no native analysis engine.
+Setup registers REA with your agent and installs matching workflow instructions. Native analysis can use an existing Hopper, Ghidra, or IDA installation, or a rizin build carrying the rz-ghidra plugin; setup can optionally install Hopper with approval. Static JavaScript analysis needs no native analysis engine.
 
 > **[Visit the REA website](https://rea.tools/)** for setup instructions, illustrated guides, and real case studies.
 
@@ -183,7 +183,7 @@ Additional tools and host support depend on the target:
 | Target                  | What REA returns                                                                                  | Requirements and guide                                                                                                                |
 | ----------------------- | ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
 | Desktop installations   | Runtime candidates, supporting files, component markers and next probes                           | Built-in bounded directory/header inspection; [desktop applications](docs/desktop-applications.md)                                    |
-| Native binaries         | Pseudocode, assembly, strings, symbols, calls and references                                      | Hopper, Ghidra or IDA; [native analysis](docs/native-investigation.md)                                                                |
+| Native binaries         | Pseudocode, assembly, strings, symbols, calls and references                                      | Hopper, Ghidra, IDA or rz-ghidra; [native analysis](docs/native-investigation.md)                                                     |
 | Offline ELF layout      | Sections, segments, original symbols/relocations and static mitigation candidates                 | Caller-supplied pwntools on Linux x64; [binary diagnostics](docs/binary-diagnostics.md)                                               |
 | Go binaries             | Embedded compiler version, modules, replacements and build settings                               | Built-in static ELF/PE/thin Mach-O inspection; no Go installation required                                                            |
 | GPU code objects        | CUDA/HIP targets, selected kernel parameters and resources, retained PTX text                     | Built-in static ELF/PE/fatbin/CUBIN/PTX inspection; [GPU code objects](docs/gpu-code-objects.md)                                      |
@@ -233,7 +233,8 @@ or update either provider.
 Native formats and host support vary by provider. See
 [Hopper and Ghidra setup](docs/installation.md#hopper), the
 [IDA guide](docs/ida-provider.md) (including an optional native MCP bridge), the
-[Kuna decompiler guide](docs/kuna-provider.md), and
+[Kuna decompiler guide](docs/kuna-provider.md), the
+[rz-ghidra guide](docs/rizin-ghidra-provider.md), and
 [experimental Windows Ghidra support](docs/windows-ghidra-p0.md).
 Ghidra also supports [16-bit DOS analysis](docs/ghidra-dos.md).
 For large binaries, raise the provider's startup deadline with
@@ -335,11 +336,11 @@ Any agent that supports local MCP servers. Setup configures the
 </details>
 
 <details>
-<summary><strong>Do I need Hopper, Ghidra or IDA?</strong></summary>
+<summary><strong>Do I need Hopper, Ghidra, IDA or rz-ghidra?</strong></summary>
 
 Deep native analysis uses one of them. Static JavaScript and .NET inspection
 work without a native analysis engine. Setup can install Hopper after approval;
-Ghidra and IDA use your existing installations. See [provider setup](docs/installation.md#hopper).
+Ghidra, IDA and rz-ghidra use installations you supply. See [provider setup](docs/installation.md#hopper).
 
 </details>
 

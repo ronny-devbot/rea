@@ -1408,6 +1408,17 @@ cached byte spans and a Ghidra comparison. See the [Linux report](https://github
 for measured scope and limitations. Windows, PE and universal Mach-O remain
 unverified by this lane.
 
+## rz-ghidra lane
+
+`npm run verify:rzghidra` requires `REA_RIZIN_COMMAND` pointing at a rizin
+build that carries the rz-ghidra plugin with its Sleigh language files. It
+verifies the MCP workflow end to end: the doctor probes, the whole-image `aa`
+pass, and the admitted operations against ELF and thin Mach-O fixtures, with
+session-scoped renames and comments visible to later reads in the same session
+while the target file bytes stay unchanged. The rizin release is reported as
+verified or unverified against the rizin release REA verified. See the
+[provider guide](rizin-ghidra-provider.md).
+
 ## DOS Ghidra analysis
 
 `npm run verify:ghidra:dos` requires the supported Ghidra and JDK installation

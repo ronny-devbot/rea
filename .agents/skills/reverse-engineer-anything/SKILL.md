@@ -2,7 +2,7 @@
 name: reverse-engineer-anything
 description: Reverse engineer native, managed, Electron/JavaScript, packaged, firmware, and browser targets with REA, and build agent environments (AgentEnv bundles) of web applications from a live instance or a capture. Use shipped-artifact or requested runtime evidence to explain features, compare versions, decompile code, or guide a reconstruction. Skip REA for ordinary source-repository architecture analysis.
 metadata:
-  version: "49"
+  version: "50"
 ---
 
 # REA
@@ -362,6 +362,8 @@ waits for the export. For pseudocode and assembly, `raw_result.source` names the
 cached `.c`/`.asm` file and byte span, which you may search directly instead of
 calling per function. See the
 [Kuna provider guide](https://github.com/morluto/rea/blob/main/docs/kuna-provider.md).
+
+With a rizin build carrying the rz-ghidra plugin (Ghidra decompiler embedded), set `REA_RIZIN_COMMAND` to it and use `open_binary` with `provider_id: "rizin-ghidra"`: it answers pseudocode, assembly, function lists, strings, symbols, segments, names, bytes, xrefs, callers/callees, and session-scoped renames/comments for ELF and Mach-O targets. See the [rz-ghidra provider guide](https://github.com/morluto/rea/blob/main/docs/rizin-ghidra-provider.md).
 
 If the user says only "my app" without a name, path, or target already selected
 for this task, ask which app before searching for artifacts. Paths in unrelated

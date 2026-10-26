@@ -38,6 +38,7 @@ cliTest.skipIf(process.platform !== "darwin")(
       REA_IDA_MCP_CONFIG: "/rea-unconfigured-deep-provider/ida-mcp.json",
       REA_KUNA_COMMAND: "/rea-unconfigured-deep-provider/kuna",
       REA_KUNA_CACHE_DIR: "/rea-unconfigured-deep-provider/kuna-cache",
+      REA_RIZIN_COMMAND: "/rea-unconfigured-deep-provider/rizin",
     });
     const good = async (name: string, arguments_: Record<string, unknown>) => {
       const result = await call(name, arguments_);
@@ -135,6 +136,7 @@ cliTest.skipIf(process.platform !== "darwin")(
       REA_IDA_MCP_CONFIG: "/rea-unconfigured-deep-provider/ida-mcp.json",
       REA_KUNA_COMMAND: "/rea-unconfigured-deep-provider/kuna",
       REA_KUNA_CACHE_DIR: "/rea-unconfigured-deep-provider/kuna-cache",
+      REA_RIZIN_COMMAND: "/rea-unconfigured-deep-provider/rizin",
       REA_LOG_LEVEL: "silent",
     };
     const result = await cli.run({
@@ -194,6 +196,7 @@ cliTest.skipIf(process.platform !== "darwin")(
       REA_IDA_MCP_CONFIG: "/rea-unconfigured-deep-provider/ida-mcp.json",
       REA_KUNA_COMMAND: "/rea-unconfigured-deep-provider/kuna",
       REA_KUNA_CACHE_DIR: "/rea-unconfigured-deep-provider/kuna-cache",
+      REA_RIZIN_COMMAND: "/rea-unconfigured-deep-provider/rizin",
     };
 
     const cliArguments = [
@@ -326,6 +329,7 @@ cliTest.skipIf(process.platform !== "darwin")(
       REA_IDA_MCP_CONFIG: "/rea-unconfigured-deep-provider/ida-mcp.json",
       REA_KUNA_COMMAND: "/rea-unconfigured-deep-provider/kuna",
       REA_KUNA_CACHE_DIR: "/rea-unconfigured-deep-provider/kuna-cache",
+      REA_RIZIN_COMMAND: "/rea-unconfigured-deep-provider/rizin",
       REA_LOG_LEVEL: "silent",
     };
 

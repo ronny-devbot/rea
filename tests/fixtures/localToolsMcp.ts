@@ -48,6 +48,7 @@ export async function connectLocalToolsMcp(
       PATH: process.env.PATH ?? "/usr/bin:/bin",
       REA_LOG_LEVEL: "silent",
       HOPPER_LAUNCHER_PATH: "/rea-unconfigured-deep-provider/hopper",
+      REA_RIZIN_COMMAND: "/rea-unconfigured-deep-provider/rizin",
       ...environment,
     },
     stderr: "pipe",

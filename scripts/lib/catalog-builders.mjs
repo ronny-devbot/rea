@@ -236,6 +236,13 @@ export const providerCatalog = (sources) => {
       ),
     },
     {
+      identity: sources.rzGhidraProvider.RIZIN_GHIDRA_PROVIDER_IDENTITY,
+      contracts: declaredContracts(
+        "rizin-ghidra",
+        sources.rzGhidraProvider.RIZIN_GHIDRA_OPERATIONS,
+      ),
+    },
+    {
       identity: sources.nativeProvider.NATIVE_MACOS_PROVIDER_IDENTITY,
       contracts: sources.nativeContracts.NATIVE_TOOL_CONTRACTS,
     },

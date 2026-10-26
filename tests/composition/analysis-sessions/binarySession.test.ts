@@ -1713,7 +1713,7 @@ it("requires explicit close before an external mutation of an active Ghidra sess
     ok: false,
     error: {
       message: expect.stringContaining(
-        "Close the active Ghidra session explicitly",
+        "Close the active analysis session explicitly",
       ),
     },
   });

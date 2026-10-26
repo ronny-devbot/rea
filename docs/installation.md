@@ -3,13 +3,13 @@
 Run REA, connect your selected agents, and check the tools needed for your task.
 Setup previews configuration changes and asks for approval before applying them.
 
-| Task                              | Section                                                                                             |
-| --------------------------------- | --------------------------------------------------------------------------------------------------- |
-| Connect an agent                  | [Start setup](#start-setup), then [review changes](#review-setup-changes)                           |
-| Diagnose one task                 | [Scoped readiness checks](#check-readiness-for-your-task)                                           |
-| Configure an analysis engine      | [Hopper](#hopper), [Ghidra](#ghidra), the [IDA guide](ida-provider.md), or [Kuna](kuna-provider.md) |
-| Update or remove REA              | [Maintenance](#diagnose-update-and-remove)                                                          |
-| Resolve a client-specific problem | [Client configuration](client-configuration.md)                                                     |
+| Task                              | Section                                                                                                                                              |
+| --------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Connect an agent                  | [Start setup](#start-setup), then [review changes](#review-setup-changes)                                                                            |
+| Diagnose one task                 | [Scoped readiness checks](#check-readiness-for-your-task)                                                                                            |
+| Configure an analysis engine      | [Hopper](#hopper), [Ghidra](#ghidra), the [IDA guide](ida-provider.md), [Kuna](kuna-provider.md), or the [rz-ghidra guide](rizin-ghidra-provider.md) |
+| Update or remove REA              | [Maintenance](#diagnose-update-and-remove)                                                                                                           |
+| Resolve a client-specific problem | [Client configuration](client-configuration.md)                                                                                                      |
 
 ## Start setup
 
@@ -374,7 +374,7 @@ Select the part you want to check:
 | Task                                | Readiness check                                                          |
 | ----------------------------------- | ------------------------------------------------------------------------ |
 | Static JavaScript/Electron analysis | Run `rea analyze-javascript-application PATH --json` directly.           |
-| One analysis engine                 | `rea doctor --provider ghidra --json` (or `hopper`, `ida`)               |
+| One analysis engine                 | `rea doctor --provider ghidra --json` (`hopper`, `ida`, `rizin-ghidra`)  |
 | One agent registration              | `rea doctor --client codex --json` (see [client IDs](#supported-agents)) |
 | Installed workflow instructions     | `rea doctor --skill --json`                                              |
 
@@ -1451,6 +1451,41 @@ read-only operations, digest identity, and runtime cleanup. The separate
 `verify:ghidra:windows:package` lane checks the packed CLI/MCP boundary with an
 ordinary user. It requires the built Windows native bundle and an existing
 Ghidra/JDK installation; neither is inferred from startup alone.
+
+## rz-ghidra
+
+[rz-ghidra](rizin-ghidra-provider.md) is a rizin build carrying the rz-ghidra
+plugin: the Ghidra decompiler embedded as a C++ library, plus the Sleigh
+disassembler. No Ghidra installation is needed. REA uses a rizin build you
+supply and does not download, install, update or bundle it. It runs on Linux
+and macOS, opens the target read-only, and is verified with rizin 0.9.1; other
+releases are reported as unverified.
+
+Build a rizin with the plugin (for example a source build of
+[rizinorg/rz-ghidra](https://github.com/rizinorg/rz-ghidra)) with its Sleigh
+language files installed alongside, then export the absolute path:
+
+```bash
+export REA_RIZIN_COMMAND=/absolute/path/to/rizin
+rea doctor --provider rizin-ghidra --json
+```
+
+| Setting                         | Default         | Meaning                                                                                                    |
+| ------------------------------- | --------------- | ---------------------------------------------------------------------------------------------------------- |
+| `REA_RIZIN_COMMAND`             | none (required) | Absolute path of the rizin executable. A plain distro rizin without the plugin will not read as available. |
+| `REA_RIZIN_ANALYSIS_TIMEOUT_MS` | 600000 (10 min) | Deadline for the one whole-image `aa` analysis pass.                                                       |
+| `REA_RIZIN_FRAME_TIMEOUT_MS`    | 120000 (120 s)  | Deadline for one command frame on the rizin console.                                                       |
+
+`REA_RIZIN_COMMAND` also configures the separate one-shot `execute_rizin_command`
+tool. Select the provider with `--provider rizin-ghidra`, `open_binary`
+`provider_id: "rizin-ghidra"`, or `REA_ANALYSIS_PROVIDER=rizin-ghidra`. See the
+[rz-ghidra provider guide](rizin-ghidra-provider.md) for the operations it
+answers and its scope.
+
+Check readiness with `rea doctor --provider rizin-ghidra --json`: it reports
+the executable and its SHA-256, the rizin version, and the one-shot `pd?`
+plugin probe, and never modifies anything. Follow the reported remediation for
+a missing plugin, an unverified release, or an unsupported host.
 
 ## MCP Registry
 

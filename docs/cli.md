@@ -375,8 +375,9 @@ and the Code chunk header. Missing optional tables stay null. See
 [Erlang BEAM files](erlang-beam.md).
 
 Configure [Hopper or Ghidra](installation.md#hopper), the
-[IDA adapter](ida-provider.md), or [Kuna](kuna-provider.md) before analyzing a
-native target. Substitute
+[IDA adapter](ida-provider.md), [Kuna](kuna-provider.md), or the
+[rz-ghidra provider](rizin-ghidra-provider.md) before analyzing a native
+target. Substitute
 your target, search text and function name or address in these examples:
 
 ```bash
@@ -418,9 +419,11 @@ rea providers --json
 rea capabilities --json
 ```
 
-These commands describe binary-session providers and auxiliary capabilities.
-For the complete MCP surface, use the connected server's tool list and the
-session's advertised availability; individual guides describe prerequisites.
+These commands describe binary-session providers and auxiliary capabilities,
+including the configured deep providers such as `ghidra`, `ida`, and
+`rizin-ghidra`, each with the operations it answers. For the complete MCP
+surface, use the connected server's tool list and the session's advertised
+availability; individual guides describe prerequisites.
 
 With automatic selection, REA uses the single available provider that supports
 the target. When several providers support it, select one explicitly:
@@ -443,8 +446,9 @@ The selected provider remains bound to the session until an explicit switch
 or close. Provider failures are returned with their original reason. For an
 `ambiguous` selection error, choose from `details.candidate_ids`; for
 `provider_unavailable`, follow `message`, `remediation.action`, and the original
-reasons in `details.rejections`. For Hopper, Ghidra, IDA, JADX, and Kuna, run
-`rea doctor --provider ID --json` to diagnose the selected engine. Other adapters,
+reasons in `details.rejections`. For Hopper, Ghidra, IDA, JADX, Kuna, and
+rizin-ghidra, run `rea doctor --provider ID --json` to diagnose the selected
+engine. Other adapters,
 such as `pwntools-elf`, report their configuration requirements directly and are
 not accepted by `doctor --provider`. See
 [task readiness](installation.md#check-readiness-for-your-task) and

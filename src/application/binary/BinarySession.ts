@@ -773,11 +773,12 @@ export class BinarySession
       if (!pendingCleanup.ok) return pendingCleanup;
 
       const activeAtDispatch = this.#active;
-      if (activeAtDispatch?.route.binding?.identity.id === "ghidra")
+      const activeBindingId = activeAtDispatch?.route.binding?.identity.id;
+      if (activeBindingId === "ghidra" || activeBindingId === "rizin-ghidra")
         return err(
           new AnalysisOutputError(
             operationName,
-            "Close the active Ghidra session explicitly before an external mutation; rebinding would discard its ephemeral analysis edits.",
+            "Close the active analysis session explicitly before an external mutation; rebinding would discard its ephemeral analysis edits.",
           ),
         );
       // A protocol reply does not prove that background writers have stopped.

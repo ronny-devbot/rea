@@ -49,6 +49,7 @@ export const startListeningProcess = async (
       env: {
         PATH: process.env.PATH ?? "",
         HOPPER_LAUNCHER_PATH: "/rea-unconfigured-deep-provider/hopper",
+        REA_RIZIN_COMMAND: "/rea-unconfigured-deep-provider/rizin",
         ...environment,
       },
     },

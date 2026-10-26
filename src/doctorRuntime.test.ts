@@ -497,6 +497,44 @@ it("carries a validated REA_KUNA_COMMAND into the provider registration environm
   });
 });
 
+it("carries a validated REA_RIZIN_COMMAND into the provider registration environment", async () => {
+  expect(DOCTOR_PROVIDER_IDS).toContain("rizin-ghidra");
+  const root = await createTestTempDirectory("rea-rizin-registration-");
+  const rizin = join(root, "rizin");
+  // A fake rizin answering both one-shot doctor probes: `rizin -v` prints the
+  // version line and `rizin -q -e scr.color=off -c pd?` lists the pdg
+  // (rz-ghidra) decompiler.
+  await writeFile(
+    rizin,
+    "#!/bin/sh\nif [ \"$1\" = -v ]; then\n  printf 'rizin 0.9.1 @ linux-x86-64\\n'\nelse\n  printf 'Available decompilers:\\n  pdg  rz-ghidra (Ghidra)\\n'\nfi\n",
+    { mode: 0o700 },
+  );
+
+  const inspections = await createSystemDoctorHost({
+    REA_RIZIN_COMMAND: rizin,
+  }).providerInspections?.();
+
+  expect(inspections?.find(({ id }) => id === "rizin-ghidra")).toMatchObject({
+    configured: true,
+    available: true,
+    providerVersion: "0.9.1",
+    registrationEnvironment: { REA_RIZIN_COMMAND: rizin },
+  });
+  expect(providerRegistrationEnvironment(inspections ?? [])).toMatchObject({
+    REA_RIZIN_COMMAND: rizin,
+  });
+});
+
+it("reports rizin-ghidra as not configured when REA_RIZIN_COMMAND is unset", async () => {
+  const inspections = await createSystemDoctorHost({}).providerInspections?.();
+  expect(inspections?.find(({ id }) => id === "rizin-ghidra")).toMatchObject({
+    configured: false,
+    available: false,
+    providerVersion: null,
+    registrationEnvironment: {},
+  });
+});
+
 const createFakeJdk = async (root: string): Promise<string> => {
   const javaHome = join(root, "fake-jdk");
   const bin = join(javaHome, "bin");

@@ -40,6 +40,7 @@ graph TD
         IDA_MCP["External ida-pro-mcp<br/>GUI proxy or database supervisor<br/>upstream installation and engine lifecycle"]
 
         KUNA["src/kuna/<br/>BYO Kuna decompiler, a deep analysis candidate<br/>discovery reads metadata only; version probe when a target opens"]
+        RZGHIDRA["src/rizinghidra/<br/>BYO rizin build with embedded Ghidra decompiler<br/>discovery reads configuration and executable metadata only; version and plugin probes when a target opens"]
         AUX["src/artifacts/ + src/native/<br/>artifact inventory, bounded directory triage and extraction<br/>format readers and native capabilities"]
 
 
@@ -196,6 +197,9 @@ graph TD
     KUNA --> PROCESS
     KUNA --> FILESYSTEM
     KUNA --> DOMAIN
+    COMPOSITION --> RZGHIDRA
+    RZGHIDRA --> PROCESS
+    RZGHIDRA --> DOMAIN
     COMPOSITION --> ANDROID_TOOLS
     ANDROID_TOOLS --> PROCESS
     ANDROID_TOOLS --> DOMAIN

@@ -8,6 +8,7 @@ import { HopperProvider } from "../hopper/HopperProvider.js";
 import { GhidraProvider } from "../ghidra/GhidraProvider.js";
 import { IdaProvider } from "../ida/IdaProvider.js";
 import { KunaProvider } from "../kuna/KunaProvider.js";
+import { RzGhidraProvider } from "../rizinghidra/RzGhidraProvider.js";
 import type { Logger } from "pino";
 import { auxiliaryAnalysisProviderDeclarations } from "./auxiliaryAnalysisProviders.js";
 import { AnalysisProviderRegistry } from "../application/binary/AnalysisProviderRegistry.js";
@@ -67,6 +68,10 @@ const composeDeepBinarySession = (
     regexMatchingDeadline: config.regexMatchingDeadline,
     regexWorkerHeapRequest: config.regexWorkerHeapRequest,
   });
+  const rzGhidra = new RzGhidraProvider(environment, {
+    regexMatchingDeadline: config.regexMatchingDeadline,
+    regexWorkerHeapRequest: config.regexWorkerHeapRequest,
+  });
   const auxiliaryDeclarations = auxiliaryAnalysisProviderDeclarations(
     environment,
     process.platform,
@@ -81,7 +86,7 @@ const composeDeepBinarySession = (
     );
   return composeBinarySession(
     new AnalysisProviderRegistry(
-      [hopper, ghidra, ida, kuna],
+      [hopper, ghidra, ida, kuna, rzGhidra],
       config.analysisProvider,
       nativeInspectionAvailable ? isAppleDispatchMetadataTarget : undefined,
     ),
