@@ -1027,28 +1027,51 @@ export class RzGhidraSessionClient implements AnalysisClient {
           userMessage: "The rizin section list is not a JSON array.",
         }),
       );
-    const rows = (frame.value as unknown[])
-      .map((row) => {
-        if (typeof row !== "object" || row === null) return undefined;
-        const record = row as Record<string, unknown>;
-        const name = typeof record.name === "string" ? record.name : undefined;
-        const address =
-          typeof record.vaddr === "string" ? record.vaddr : undefined;
-        // The NULL pseudo-section (vaddr 0xffffffffffffffff) is a rizin
-        // placeholder, not a segment.
-        if (
-          name === undefined ||
-          name.length === 0 ||
-          address === undefined ||
-          record.type === "NULL"
-        )
-          return undefined;
-        return { address, value: name };
-      })
-      .filter(
-        (row): row is { address: string; value: string } => row !== undefined,
-      );
-    return ok({ result: rows, locations: [], limitations: [] });
+    const rows: {
+      readonly name: string;
+      readonly start: string;
+      readonly end: string;
+      readonly readable: boolean;
+      readonly writable: boolean;
+      readonly executable: boolean;
+    }[] = [];
+    for (const row of frame.value as unknown[]) {
+      if (typeof row !== "object" || row === null) continue;
+      const record = row as Record<string, unknown>;
+      const name = typeof record.name === "string" ? record.name : undefined;
+      const start = typeof record.vaddr === "string" ? record.vaddr : undefined;
+      // The NULL placeholder and file-only sections (vaddr 0xffffffffffffffff,
+      // e.g. .symtab/.strtab) are not loadable segments.
+      if (
+        name === undefined ||
+        name.length === 0 ||
+        start === undefined ||
+        start === "0xffffffffffffffff" ||
+        record.type === "NULL"
+      )
+        continue;
+      const size = typeof record.vsize === "number" ? record.vsize : 0;
+      // rizin perm is [?][r][w][x]: positions 1, 2, 3 are read/write/exec.
+      const perm = typeof record.perm === "string" ? record.perm : "";
+      rows.push({
+        name,
+        start,
+        end: `0x${(BigInt(start) + BigInt(size)).toString(16)}`,
+        readable: perm[1] === "r",
+        writable: perm[2] === "w",
+        executable: perm[3] === "x",
+      });
+    }
+    // One consistent load base so the overview can report a single image_base.
+    let imageBase: string | undefined;
+    for (const row of rows)
+      if (imageBase === undefined || BigInt(row.start) < BigInt(imageBase))
+        imageBase = row.start;
+    const segments =
+      imageBase === undefined
+        ? rows
+        : rows.map((row) => ({ ...row, image_base: imageBase }));
+    return ok({ result: segments, locations: [], limitations: [] });
   }
 
   async #procedureAnswer(
@@ -1318,7 +1341,11 @@ export class RzGhidraSessionClient implements AnalysisClient {
     return ok(this.#functions);
   }
 
-  /** Resolve a procedure by exact entry address or exact name. */
+  /**
+   * Resolve a procedure by entry address or name. A bare name also matches
+   * rizin's namespaced forms, since global symbols are `sym.N` and entry
+   * points `entry.N` while `main` is unprefixed.
+   */
   #resolve(
     operation: string,
     raw: unknown,
@@ -1344,7 +1371,12 @@ export class RzGhidraSessionClient implements AnalysisClient {
           )
         : ok(entry);
     }
-    const matches = functions.byName.get(selector) ?? [];
+    const matches = [...(functions.byName.get(selector) ?? [])];
+    if (matches.length === 0)
+      for (const prefixed of [`sym.${selector}`, `entry.${selector}`]) {
+        const found = functions.byName.get(prefixed);
+        if (found !== undefined) matches.push(...found);
+      }
     const first = matches[0];
     if (matches.length === 1 && first !== undefined) return ok(first);
     return err(

@@ -74,8 +74,24 @@ it("list_segments returns sections with the NULL pseudo-section excluded", async
   try {
     const segments = await run(client, "list_segments");
     expect(segments.result).toEqual([
-      { address: "0x1000", value: ".text" },
-      { address: "0x2000", value: ".rodata" },
+      {
+        name: ".text",
+        start: "0x1000",
+        end: "0x1100",
+        readable: true,
+        writable: false,
+        executable: true,
+        image_base: "0x1000",
+      },
+      {
+        name: ".rodata",
+        start: "0x2000",
+        end: "0x2100",
+        readable: true,
+        writable: false,
+        executable: false,
+        image_base: "0x1000",
+      },
     ]);
     // list_segments is bin info: no whole-image `aa` pass on the console.
     expect(await fakeRizinStdin(fixture.rizin)).not.toContain("aa");

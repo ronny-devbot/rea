@@ -134,9 +134,9 @@ const DEFAULT_FUNCTIONS = [
   { offset: "18446744073709543424", name: "big", size: 8, nbbs: 1, signature: null, callrefs: [] }
 ];
 const DEFAULT_SECTIONS = [
-  { name: ".text", vaddr: 4096, paddr: 4096, size: 256, vsize: 256, perm: "r-x", type: "PROGBITS" },
-  { name: ".rodata", vaddr: 8192, paddr: 8192, size: 256, vsize: 256, perm: "r--", type: "PROGBITS" },
-  { name: "NULL", vaddr: "18446744073709551615", paddr: "18446744073709551615", size: 0, vsize: 0, perm: "---", type: "NULL" }
+  { name: ".text", vaddr: 4096, paddr: 4096, size: 256, vsize: 256, perm: "-r-x", type: "PROGBITS" },
+  { name: ".rodata", vaddr: 8192, paddr: 8192, size: 256, vsize: 256, perm: "-r--", type: "PROGBITS" },
+  { name: "NULL", vaddr: "18446744073709551615", paddr: "18446744073709551615", size: 0, vsize: 0, perm: "----", type: "NULL" }
 ];
 const DEFAULT_STRINGS = [
   { vaddr: 8192, string: "REA fixture prompt", section: ".rodata", type: "ascii" },
@@ -257,7 +257,7 @@ if (args[0] === "-v") {
         if (behavior.iSj === "hang") return;
         out("[" + (behavior.sections ?? DEFAULT_SECTIONS).map((row) =>
           '{"name":' + JSON.stringify(row.name) + ',"size":' + String(row.size ?? 0) + ',"vsize":' + String(row.vsize ?? row.size ?? 0) +
-          ',"perm":' + JSON.stringify(row.perm ?? "r--") + ',"type":' + JSON.stringify(row.type ?? "PROGBITS") +
+          ',"perm":' + JSON.stringify(row.perm ?? "-r--") + ',"type":' + JSON.stringify(row.type ?? "PROGBITS") +
           ',"paddr":' + String(row.paddr ?? row.vaddr) + ',"vaddr":' + String(row.vaddr) + "}") + "]");
         return;
       case "iMj": {
